@@ -1,12 +1,31 @@
 /* Core configuration js file */
 
+//import * as config from '../config.js';
+
+
+function dynamicallyLoadScript(url) {
+    var script = document.createElement("script");  // create a script DOM node
+    script.src = url;  // set its src to the provided URL
+
+    document.head.appendChild(script);  // add it to the end of the head section of the page (could change 'head' to 'body' to add it to the end of the body section instead)
+}
+//dynamicallyLoadScript('./config.js');
+
 function debug() {
   console.log("debug!");
   //read_base()
+  apply_config(config);
   set_file();
 }
 
-
+function apply_config(config) {
+  document.getElementById('title').innerHTML = config.UI.Title;
+  document.getElementById('footer').innerHTML = config.UI.Footer;
+  document.getElementById('prev_button').innerHTML = config.UI.Previous;
+  document.getElementById('next_button').innerHTML = config.UI.Next;
+  document.getElementById('menu_button').innerHTML = config.UI.Menu;
+  document.getElementById('query_content').innerHTML = '<b>' + config.UI.default_query_content + '</b>';
+}
 
 
 function Query_Unit(id, category, query, choice, answer) {
@@ -22,7 +41,7 @@ function Query_Unit(id, category, query, choice, answer) {
 var queries = [];
 var current_query_id = 0;
 var query_history = [];
-var goto_next_query = next_query;
+var goto_next_query = config.setting.random_next ? rand_next : next_query;
 
 /**
  * Check for the various File API support.
@@ -216,15 +235,15 @@ function show_query(unit) {
 }
 
 function create_selections(selections) {
-  $("#selection_board").html('<fieldset data-role="controlgroup"><legend><b>Please choose:</b></legend></fieldset>');
+  $("#selection_board").html('<fieldset data-role="controlgroup"><legend><b>' + config.UI.Select_msg + '</b></legend></fieldset>');
 
   for (var i = 0; i < selections.length; i++) {
     $("fieldset").append('<input type="checkbox" name="' + selections[i] + '" id="id' + i + '"><label for="id' + i + '">' + selections[i] + '</label>');
   }
   //$("#selection_board").append('<a href="#" data-role="button" data-inline="true" id="btndelcat">Elimina</a>');
   $("#selection_board").append('<div data-role="navbar"><ul>\
-<li><a href="#" class="ui-btn-active" onclick="check_answer()">Submit</a>\</li>\
-<li><a href="#" onclick="show_answer()">Show answer</a>\
+<li><a href="#" class="ui-btn-active" onclick="check_answer()">' + config.UI.Submit + '</a>\</li>\
+<li><a href="#" onclick="show_answer()">' + config.UI.Answer + '</a>\
 </li></ul></div>');
   $("#selection_board").trigger('create');
 }

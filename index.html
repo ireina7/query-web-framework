@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="lib/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css" />
   <script src="lib/jquery-1.11.1.min.js"></script>
   <script src="lib/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <script src="./config.js"></script>
 
 </head>
 
@@ -14,8 +15,8 @@
   <div data-role="page">
 
     <div data-role="header">
-      <a href="#" class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-grid">Menu</a>
-      <h1>Query Web Framework Title</h1>
+      <a href="#" id="menu_button" class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-grid">Menu</a>
+      <h1 id="title">Query Web Framework Title</h1>
     </div>
 
     <div role="main" class="ui-content">
@@ -44,9 +45,9 @@
       -->
 
 
-      <a href="#" class="ui-btn ui-btn-inline ui-btn-icon-left   ui-icon-arrow-l" onclick="prev_query()">Prev</a>
+      <a href="#" id="prev_button" class="ui-btn ui-btn-inline ui-btn-icon-left   ui-icon-arrow-l" onclick="prev_query()">Prev</a>
       <div style="float:right">
-        <a href="#" class="ui-btn ui-btn-inline ui-btn-icon-right  ui-icon-arrow-r" onclick="goto_next_query()">Next</a>
+        <a href="#" id="next_button" class="ui-btn ui-btn-inline ui-btn-icon-right  ui-icon-arrow-r" onclick="goto_next_query()">Next</a>
       </div>
       <!--
       <a href="#" class="ui-btn ui-btn-inline ui-btn-icon-top    ui-icon-arrow-u">Top</a>
@@ -56,9 +57,10 @@
     </div><!-- end main contnet -->
 
     <div data-role="footer">
-      <h4>Query Page Footer</h4>
+      <h4 id="footer">Query Page Footer</h4>
     </div><!-- end footer -->
   </div><!-- end page -->
 </body>
 <script src="src/core.js"></script>
+
 </html>
