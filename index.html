@@ -9,20 +9,38 @@
 </head>
 
 <body>
-  ...content goes here...
   <div data-role="page">
 
     <div data-role="header">
-      <h1>Page Title</h1>
-    </div><!-- /header -->
+      <a href="#" class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-grid">Menu</a>
+      <h1>Query web framework Title</h1>
+    </div>
 
     <div role="main" class="ui-content">
-      <p>Page content goes here.</p>
-    </div><!-- /content -->
+      <form>
+        <input id="filter-for-listview" data-type="search" placeholder="Type to search...">
+      </form>
+      <p>Query content goes here.</p>
+      <form>
+        <input type="submit" value="Submit">
+        <input type="reset" value="Reset">
+      </form>
+
+
+      <a href="#" class="ui-btn ui-btn-inline ui-btn-icon-left   ui-icon-arrow-l">Prev</a>
+      <div style="float:right">
+        <a href="#" class="ui-btn ui-btn-inline ui-btn-icon-right  ui-icon-arrow-r">Next</a>
+      </div>
+      <!--
+      <a href="#" class="ui-btn ui-btn-inline ui-btn-icon-top    ui-icon-arrow-u">Top</a>
+      <a href="#" class="ui-btn ui-btn-inline ui-btn-icon-bottom ui-icon-arrow-d">Bottom</a>
+      -->
+
+    </div><!-- end main contnet -->
 
     <div data-role="footer">
-      <h4>Page Footer</h4>
-    </div><!-- /footer -->
-  </div><!-- /page -->
+      <h4>Query Page Footer</h4>
+    </div><!-- end footer -->
+  </div><!-- end page -->
 </body>
 </html>
