@@ -135,6 +135,12 @@ function check_answer() {
   } else if(cat == '填空题') {
     res = check_answer_fill(unit);
 
+  } else if(cat == '问答题') {
+    res = check_answer_fill(unit);
+
+  } else if(cat == '简答题') {
+    res = check_answer_fill(unit);
+
   } else {
     console.log('Query category of ' + cat + ' is not supported!');
     alert('Query category error, please reload base file.');
@@ -197,6 +203,12 @@ function show_query(unit) {
   } else if(cat == '填空题') {
     show_query_fill(unit);
 
+  } else if(cat == '问答题') {
+    show_query_fill(unit);
+
+  } else if(cat == '简答题') {
+    show_query_fill(unit);
+
   } else {
     console.log('Query category of ' + cat + ' is not supported!');
     alert('Query category error, please reload base file.');
@@ -230,6 +242,7 @@ function show_query_multiple_selection(unit) {
 function show_query_fill(unit) {
   console.log(unit);
   print_query_content("<b>" + unit.category + '</b>\t' + unit.query);
+  create_selections([]);
 }
 function show_query_yes_no(unit) {
   console.log(unit);
