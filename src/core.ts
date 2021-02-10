@@ -63,7 +63,7 @@ function Query_Unit(id: string, category: string, query: string, choice: string[
 var queries: Query[] = [];
 var current_query_id = 0;
 var query_history = [];
-var goto_next_query = config.setting.random_next ? rand_next : next_query;
+var goto_next_query = config.setting.random_next ? rand_query : next_query;
 
 /**
  * Check for the various File API support.
@@ -265,30 +265,32 @@ function create_selections(selections: string[]) {
     }
     //$("#selection_board").append('<a href="#" data-role="button" data-inline="true" id="btndelcat">Elimina</a>');
     $("#selection_board").append('<div data-role="navbar"><ul>\
-<li><a href="#" class="ui-btn-active" onclick="check_answer()">' + config.UI.Submit + '</a>\</li>\
-<li><a href="#" onclick="show_answer()">' + config.UI.Answer + '</a>\
+<li><a href="#" id="button_check_answer" class="ui-btn-active">' + config.UI.Submit + '</a>\</li>\
+<li><a href="#" id="button_show_answer">' + config.UI.Answer + '</a>\
 </li></ul></div>');
     $("#selection_board").trigger('create');
+    $("#button_check_answer").click(check_answer);
+    $("#button_show_answer").click(show_answer);
 }
 
 function show_query_single_selection(unit: Query) {
     console.log(unit);
-    print_query_content("<b>" + unit.category + '</b>\t' + unit.query);
+    print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
     create_selections(unit.choice);
 }
 function show_query_multiple_selection(unit: Query) {
     console.log(unit);
-    print_query_content("<b>" + unit.category + '</b>\t' + unit.query);
+    print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
     create_selections(unit.choice);
 }
 function show_query_fill(unit: Query) {
     console.log(unit);
-    print_query_content("<b>" + unit.category + '</b>\t' + unit.query);
+    print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
     create_selections([]);
 }
 function show_query_yes_no(unit: Query) {
     console.log(unit);
-    print_query_content("<b>" + unit.category + '</b>\t' + unit.query);
+    print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
     create_selections(['Y', 'N']);
 }
 
