@@ -1,6 +1,6 @@
 /* Core configuration js file */
 
-import { config } from '../config';
+import { config } from '../config.js';
 
 declare var jquery: any;
 declare var $: any;
@@ -62,7 +62,7 @@ function Query_Unit(id: string, category: string, query: string, choice: string[
 
 var queries: Query[] = [];
 var current_query_id = 0;
-var query_history = [];
+var query_history: Query[] = [];
 var goto_next_query = config.setting.random_next ? rand_query : next_query;
 
 /**
@@ -70,7 +70,7 @@ var goto_next_query = config.setting.random_next ? rand_query : next_query;
  */
 function get_reader_when_checked_file_API() {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-        var reader = new FileReader();
+        let reader = new FileReader();
         return reader;
     } else {
         alert('The File APIs are not fully supported by your browser. Fallback required.');
@@ -81,15 +81,15 @@ function get_reader_when_checked_file_API() {
 function set_file() {
     document.getElementById('base_file').onchange = function() {
 
-        var file = this.files[0];
+        let file = this.files[0];
 
-        var reader = get_reader_when_checked_file_API();
+        let reader = get_reader_when_checked_file_API();
         reader.onload = function(progressEvent) {
             // Entire file
             //console.log(this.result);
 
             // By lines
-            var lines = this.result.split('\n');
+            let lines = this.result.split('\n');
             queries = lines.filter((line: string) => line.trim() !== '').map((line: string) => parse_line_from_base(line));
             console.log('Loaded ' + queries.length + ' queries.');
             next_query();

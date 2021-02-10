@@ -1,4 +1,4 @@
-import { config } from '../config';
+import { config } from '../config.js';
 function dynamicallyLoadScript(url) {
     var script = document.createElement("script");
     script.src = url;
@@ -40,7 +40,7 @@ var query_history = [];
 var goto_next_query = config.setting.random_next ? rand_query : next_query;
 function get_reader_when_checked_file_API() {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
-        var reader = new FileReader();
+        let reader = new FileReader();
         return reader;
     }
     else {
@@ -50,10 +50,10 @@ function get_reader_when_checked_file_API() {
 }
 function set_file() {
     document.getElementById('base_file').onchange = function () {
-        var file = this.files[0];
-        var reader = get_reader_when_checked_file_API();
+        let file = this.files[0];
+        let reader = get_reader_when_checked_file_API();
         reader.onload = function (progressEvent) {
-            var lines = this.result.split('\n');
+            let lines = this.result.split('\n');
             queries = lines.filter((line) => line.trim() !== '').map((line) => parse_line_from_base(line));
             console.log('Loaded ' + queries.length + ' queries.');
             next_query();
