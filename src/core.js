@@ -1,41 +1,43 @@
-/* Core configuration js file */
-//import * as config from '../config.js';
+import { config } from '../config.js';
 function dynamicallyLoadScript(url) {
-    var script = document.createElement("script"); // create a script DOM node
-    script.src = url; // set its src to the provided URL
-    document.head.appendChild(script); // add it to the end of the head section of the page (could change 'head' to 'body' to add it to the end of the body section instead)
+    var script = document.createElement("script");
+    script.src = url;
+    document.head.appendChild(script);
 }
-//dynamicallyLoadScript('./config.js');
 function debug() {
     console.log("debug!");
-    //read_base()
     apply_config(config);
     set_file();
+    $('#next_button').click(goto_next_query);
+    $('#prev_button').click(prev_query);
 }
 function apply_config(config) {
-    document.getElementById('title').innerHTML = config.UI.Title;
-    document.getElementById('footer').innerHTML = config.UI.Footer;
-    document.getElementById('prev_button').innerHTML = config.UI.Previous;
-    document.getElementById('next_button').innerHTML = config.UI.Next;
-    document.getElementById('menu_button').innerHTML = config.UI.Menu;
-    document.getElementById('query_content').innerHTML = '<b>' + config.UI.default_query_content + '</b>';
+    function set(id, content) {
+        document.getElementById(id).innerHTML = content;
+    }
+    set('title', config.UI.Title);
+    set('footer', config.UI.Footer);
+    set('prev_button', config.UI.Previous);
+    set('next_button', config.UI.Next);
+    set('menu_button', config.UI.Menu);
+    set('query_content', '<b>' + config.UI.default_query_content + '</b>');
+}
+class Query {
+    constructor(id, category, query, choice, answer) {
+        this.id = id;
+        this.category = category;
+        this.query = query;
+        this.choice = choice;
+        this.answer = answer;
+    }
 }
 function Query_Unit(id, category, query, choice, answer) {
-    return {
-        id: id,
-        category: category,
-        query: query,
-        choice: choice,
-        answer: answer
-    };
+    return new Query(id, category, query, choice, answer);
 }
 var queries = [];
 var current_query_id = 0;
 var query_history = [];
 var goto_next_query = config.setting.random_next ? rand_next : next_query;
-/**
- * Check for the various File API support.
- */
 function get_reader_when_checked_file_API() {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
         var reader = new FileReader();
@@ -43,7 +45,7 @@ function get_reader_when_checked_file_API() {
     }
     else {
         alert('The File APIs are not fully supported by your browser. Fallback required.');
-        return false;
+        return undefined;
     }
 }
 function set_file() {
@@ -51,14 +53,10 @@ function set_file() {
         var file = this.files[0];
         var reader = get_reader_when_checked_file_API();
         reader.onload = function (progressEvent) {
-            // Entire file
-            //console.log(this.result);
-            // By lines
             var lines = this.result.split('\n');
-            queries = lines.filter(function (line) { return line.trim() !== ''; }).map(function (line) { return parse_line_from_base(line); });
+            queries = lines.filter((line) => line.trim() !== '').map((line) => parse_line_from_base(line));
             console.log('Loaded ' + queries.length + ' queries.');
             next_query();
-            //console.log(queries);
         };
         reader.readAsText(file);
     };
@@ -67,7 +65,7 @@ function print_query_content(content) {
     document.getElementById('query_content').innerHTML = content;
 }
 function parse_line_from_base(line) {
-    var units = line.split('\t');
+    let units = line.split('\t');
     return Query_Unit(units[0], units[1], units[2], [units[3], units[4], units[5], units[6]], units[7]);
 }
 function next_query() {
@@ -112,7 +110,7 @@ function rand_query() {
         console.log("No query! Please load base file first of check your base file if empty!");
         return;
     }
-    var rand_id = get_random_Int(queries.length);
+    let rand_id = get_random_Int(queries.length);
     current_query_id = rand_id;
     if (queries[current_query_id] === undefined) {
         current_query_id = 0;
@@ -121,9 +119,9 @@ function rand_query() {
     show_query(queries[current_query_id]);
 }
 function check_answer() {
-    var unit = queries[current_query_id];
-    var cat = unit.category;
-    var res = false;
+    let unit = queries[current_query_id];
+    let cat = unit.category;
+    var res = "";
     if (cat == '单选题') {
         res = check_answer_selection(unit);
     }
@@ -162,10 +160,10 @@ function show_message(msg) {
     document.getElementById('interaction').innerHTML = msg;
 }
 function check_answer_selection(unit) {
-    var a = $("#id0").is(":checked");
-    var b = $("#id1").is(":checked");
-    var c = $("#id2").is(":checked");
-    var d = $("#id3").is(":checked");
+    let a = $("#id0").is(":checked");
+    let b = $("#id1").is(":checked");
+    let c = $("#id2").is(":checked");
+    let d = $("#id3").is(":checked");
     var ans = '';
     if (a)
         ans += 'A';
@@ -178,8 +176,8 @@ function check_answer_selection(unit) {
     return ans;
 }
 function check_answer_yes_no(unit) {
-    var yes = $("#id0").is(":checked");
-    var noo = $("#id1").is(":checked");
+    let yes = $("#id0").is(":checked");
+    let noo = $("#id1").is(":checked");
     var ans = '';
     if (yes)
         ans += 'Y';
@@ -189,9 +187,10 @@ function check_answer_yes_no(unit) {
 }
 function check_answer_fill(unit) {
     document.getElementById('interaction').innerHTML = "O";
+    return "";
 }
 function show_query(unit) {
-    var cat = unit.category;
+    let cat = unit.category;
     if (cat == '单选题') {
         show_query_single_selection(unit);
     }
@@ -220,7 +219,6 @@ function create_selections(selections) {
     for (var i = 0; i < selections.length; i++) {
         $("fieldset").append('<input type="checkbox" name="' + selections[i] + '" id="id' + i + '"><label for="id' + i + '">' + selections[i] + '</label>');
     }
-    //$("#selection_board").append('<a href="#" data-role="button" data-inline="true" id="btndelcat">Elimina</a>');
     $("#selection_board").append('<div data-role="navbar"><ul>\
 <li><a href="#" class="ui-btn-active" onclick="check_answer()">' + config.UI.Submit + '</a>\</li>\
 <li><a href="#" onclick="show_answer()">' + config.UI.Answer + '</a>\
@@ -248,3 +246,4 @@ function show_query_yes_no(unit) {
     create_selections(['Y', 'N']);
 }
 debug();
+//# sourceMappingURL=core.js.map
