@@ -1,6 +1,6 @@
 /* Core configuration js file */
 
-import { config } from '../config.js';
+import { config } from '../config';
 
 declare var jquery: any;
 declare var $: any;
