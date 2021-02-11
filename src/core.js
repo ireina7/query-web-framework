@@ -52,7 +52,7 @@ function set_file() {
     document.getElementById('base_file').onchange = function () {
         let file = this.files[0];
         let reader = get_reader_when_checked_file_API();
-        reader.onload = function (progressEvent) {
+        reader.onload = function () {
             let lines = this.result.split('\n');
             queries = lines.filter((line) => line.trim() !== '').map((line) => parse_line_from_base(line));
             console.log('Loaded ' + queries.length + ' queries.');

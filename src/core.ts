@@ -79,17 +79,17 @@ function get_reader_when_checked_file_API() {
 }
 
 function set_file() {
-    document.getElementById('base_file').onchange = function() {
+    document.getElementById('base_file').onchange = function(this: HTMLInputElement) {
 
         let file = this.files[0];
 
         let reader = get_reader_when_checked_file_API();
-        reader.onload = function(progressEvent) {
+        reader.onload = function(this) {
             // Entire file
             //console.log(this.result);
 
             // By lines
-            let lines = this.result.split('\n');
+            let lines = (<string>this.result).split('\n');
             queries = lines.filter((line: string) => line.trim() !== '').map((line: string) => parse_line_from_base(line));
             console.log('Loaded ' + queries.length + ' queries.');
             next_query();
