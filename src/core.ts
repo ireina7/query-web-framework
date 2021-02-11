@@ -3,8 +3,9 @@
 import { config } from '../config.js';
 import {
     dynamically_load_script,
+    get_random_Int,
     Nothing, Maybe
-} from './utils';
+} from './utils.js';
 
 declare var jquery: any;
 declare var $: any;
@@ -15,6 +16,7 @@ function main() {
     console.log("debug!");
     apply_config(config);
     set_file();
+    get_random_Int(1);
     $('#next_button').click(goto_next_query);
     $('#prev_button').click(prev_query);
 }
@@ -35,11 +37,15 @@ function apply_config(config: any) {
 
 
 class Query {
-    id: number;
-    category: string;
-    query: string;
-    choice: string[];
-    answer: string;
+    /**
+       The central Query unit class
+       Keep query data class definition simple!
+     */
+    readonly id: number;
+    readonly category: string;
+    readonly query: string;
+    readonly choice: string[];
+    readonly answer: string;
 
     constructor(id: number, category: string, query: string, choice: string[], answer: string) {
         this.id = id;
@@ -68,7 +74,7 @@ var goto_next_query = config.setting.random_next ? rand_query : next_query;
 /**
  * Check for the various File API support.
  */
-function get_reader_when_checked_file_API() {
+function get_reader_when_checked_file_API(): FileReader | undefined {
     if (window.File && window.FileReader && window.FileList && window.Blob) {
         let reader = new FileReader();
         return reader;
@@ -82,8 +88,10 @@ function set_file() {
     document.getElementById('base_file').onchange = function(this: HTMLInputElement) {
 
         let file = this.files[0];
-
         let reader = get_reader_when_checked_file_API();
+        if(!reader) {
+            return;
+        }
         reader.onload = function(this) {
             // Entire file
             //console.log(this.result);
@@ -104,7 +112,7 @@ function print_query_content(content: string) {
 }
 
 
-function parse_line_from_base(line: string) {
+function parse_line_from_base(line: string): Query {
     let units = line.split('\t');
     return Query_Unit(Number(units[0]), units[1], units[2], [units[3], units[4], units[5], units[6]], units[7]);
 }
@@ -143,9 +151,7 @@ function prev_query() {
     show_query(queries[current_query_id]);
 }
 
-function get_random_Int(max: number) {
-    return Math.floor(Math.random() * Math.floor(max));
-}
+
 function rand_query() {
     if(queries.length <= 0) {
         console.log("No query! Please load base file first of check your base file if empty!");

@@ -5,6 +5,10 @@ export function dynamically_load_script(url: string) {
     document.head.appendChild(script);  // add it to the end of the head section of the page (could change 'head' to 'body' to add it to the end of the body section instead)
 }
 
+export function get_random_Int(max: number) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
 
 export const Nothing = Symbol('nothing');
 export type Nothing = typeof Nothing;

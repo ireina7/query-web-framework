@@ -16,7 +16,20 @@
   <div data-role="page">
 
     <div data-role="header">
-      <a href="#" id="menu_button" class="ui-btn ui-btn-inline ui-btn-icon-left ui-icon-grid">Menu</a>
+      <a href="#popupMenu" id="menu_button" data-rel="popup"
+         data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-bars ui-btn-icon-left ui-btn-a">
+        Menu
+      </a>
+      <div data-role="popup" id="popupMenu" data-theme="a">
+        <ul data-role="listview" data-inset="true" style="min-width:160px;">
+          <li data-role="list-divider">Choose an action</li>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Setting</a></li>
+          <li><a href="#">Reset</a></li>
+          <li><a href="#">Help</a></li>
+        </ul>
+      </div>
+
       <h1 id="title">Query Web Framework Title</h1>
     </div>
 
