@@ -3,12 +3,18 @@
 
 Small, portable mobile question answering web framework
 
+** Dependences
+- node.js
+- http-server (or any other servers you like)
+- TypeScript compiler =tsc=.
+
+
 ** Getting started
-- In shell:
+*** In shell:
 #+BEGIN_SRC shell
 tsc
 http-server -c-1 -p 8080
 #+END_SRC
 
-- In browser:
+*** In browser:
 Jump to =http://localhost:8080/=.
