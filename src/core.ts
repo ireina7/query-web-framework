@@ -2,7 +2,8 @@
 
 import { config } from '../config.js';
 import {
-    dynamically_load_script
+    dynamically_load_script,
+    Nothing, Maybe
 } from './utils';
 
 declare var jquery: any;
@@ -191,7 +192,6 @@ function check_answer() {
     } else {
         show_message('X');
     }
-    return res;
 }
 function show_answer() {
     show_message(queries[current_query_id].answer);
