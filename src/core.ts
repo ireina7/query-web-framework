@@ -1,19 +1,16 @@
 /* Core configuration js file */
 
 import { config } from '../config.js';
+import {
+    dynamically_load_script
+} from './utils';
 
 declare var jquery: any;
 declare var $: any;
 
-function dynamicallyLoadScript(url: string) {
-    var script = document.createElement("script");  // create a script DOM node
-    script.src = url;  // set its src to the provided URL
 
-    document.head.appendChild(script);  // add it to the end of the head section of the page (could change 'head' to 'body' to add it to the end of the body section instead)
-}
-//dynamicallyLoadScript('./config.js');
 
-function debug() {
+function main() {
     console.log("debug!");
     apply_config(config);
     set_file();
@@ -34,14 +31,16 @@ function apply_config(config: any) {
 }
 
 
+
+
 class Query {
-    id: string;
+    id: number;
     category: string;
     query: string;
     choice: string[];
     answer: string;
 
-    constructor(id: string, category: string, query: string, choice: string[], answer: string) {
+    constructor(id: number, category: string, query: string, choice: string[], answer: string) {
         this.id = id;
         this.category = category;
         this.query = query;
@@ -50,7 +49,7 @@ class Query {
     }
 }
 
-function Query_Unit(id: string, category: string, query: string, choice: string[], answer: string): Query {
+function Query_Unit(id: number, category: string, query: string, choice: string[], answer: string): Query {
     return new Query (
         id,
         category,
@@ -106,7 +105,7 @@ function print_query_content(content: string) {
 
 function parse_line_from_base(line: string) {
     let units = line.split('\t');
-    return Query_Unit(units[0], units[1], units[2], [units[3], units[4], units[5], units[6]], units[7]);
+    return Query_Unit(Number(units[0]), units[1], units[2], [units[3], units[4], units[5], units[6]], units[7]);
 }
 
 
@@ -296,4 +295,4 @@ function show_query_yes_no(unit: Query) {
 
 
 
-debug()
+main();

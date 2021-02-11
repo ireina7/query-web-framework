@@ -1,5 +1,6 @@
 test/
 base/*
 *.js.map
+src/*.js
 config.js
 !.gitkeep
