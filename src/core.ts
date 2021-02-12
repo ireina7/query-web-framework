@@ -109,6 +109,18 @@ class Test implements Iterable<Query> {
     }
 }
 
+namespace UI {
+    export function show_message(msg: string) {
+        document.getElementById('interaction').innerHTML = msg;
+    }
+    export function print_query_content(content: string) {
+        document.getElementById('query_content').innerHTML = content;
+    }
+}
+
+
+
+
 
 let test: Test = new Test([]);
 
@@ -160,15 +172,13 @@ function set_file() {
 
             goto_next_query();
             console.log('Loaded ' + test.queries.length + ' queries.');
-            show_message('Loaded ' + test.queries.length + ' queries.');
+            UI.show_message('Loaded ' + test.queries.length + ' queries.');
         };
         reader.readAsText(file);
     };
 }
 
-function print_query_content(content: string) {
-    document.getElementById('query_content').innerHTML = content;
-}
+
 
 
 function parse_line_from_base(line: string): Query {
@@ -252,18 +262,15 @@ function check_answer() {
         return false;
     }
     if(res === unit.answer) {
-        show_message('O');
+        UI.show_message('O');
     } else {
-        show_message('X');
+        UI.show_message('X');
     }
 }
 function show_answer() {
-    show_message(test.current_query.answer);
+    UI.show_message(test.current_query.answer);
 }
 
-function show_message(msg: string) {
-    document.getElementById('interaction').innerHTML = msg;
-}
 
 function check_answer_selection(unit: Query): string {
     let a = $("#id0").is(":checked");
@@ -338,22 +345,22 @@ function create_selections(selections: string[]) {
 
 function show_query_single_selection(unit: Query) {
     console.log(unit);
-    print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
+    UI.print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
     create_selections(unit.choice);
 }
 function show_query_multiple_selection(unit: Query) {
     console.log(unit);
-    print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
+    UI.print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
     create_selections(unit.choice);
 }
 function show_query_fill(unit: Query) {
     console.log(unit);
-    print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
+    UI.print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
     create_selections([]);
 }
 function show_query_yes_no(unit: Query) {
     console.log(unit);
-    print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
+    UI.print_query_content(unit.id + ". " + "<b>" + unit.category + '</b>\t' + unit.query);
     create_selections(['Y', 'N']);
 }
 
