@@ -17,16 +17,17 @@
 
     <div data-role="header">
       <a href="#popupMenu" id="menu_button" data-rel="popup"
-         data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-bars ui-btn-icon-left ui-btn-a">
+         data-transition="slideup" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-bars ui-btn-icon-left">
         Menu
       </a>
       <div data-role="popup" id="popupMenu" data-theme="a">
-        <ul data-role="listview" data-inset="true" style="min-width:160px;">
+        <ul data-role="listview" data-inset="true" style="min-width:200px;">
           <li data-role="list-divider">Choose an action</li>
           <li><a href="#" onclick="window.location.reload();">Home</a></li>
           <li><a href="#">Setting</a></li>
           <li><a href="#" onclick="window.location.reload();">Reset</a></li>
           <li><a href="#popupPadded" data-rel="popup">Help</a></li>
+          <li><a href="#" id="menu_switch_theme">Switch Theme</a></li>
         </ul>
       </div>
 

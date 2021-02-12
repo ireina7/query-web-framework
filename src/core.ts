@@ -16,10 +16,7 @@ declare var $: any;
 function main() {
     console.log("debug!");
     apply_config(config);
-    set_file();
-    get_random_Int(1);
-    $('#next_button').click(goto_next_query);
-    $('#prev_button').click(goto_prev_query);
+    UI.init();
 }
 
 function apply_config(c: typeof config = config) {
@@ -109,13 +106,96 @@ class Test implements Iterable<Query> {
     }
 }
 
-namespace UI {
+export namespace UI {
+    export function init(c?: typeof config) {
+        set_file();
+        $('#next_button').click(goto_next_query);
+        $('#prev_button').click(goto_prev_query);
+
+        $.mobile.changeGlobalTheme = function(theme: string)
+        {
+            // These themes will be cleared, add more
+            // swatch letters as needed.
+            var themes = " a b c d e";
+
+            // Updates the theme for all elements that match the
+            // CSS selector with the specified theme class.
+            function setTheme(cssSelector: string, themeClass: string, theme: string)
+            {
+                $(cssSelector)
+                    .removeClass(themes.split(" ").join(" " + themeClass + "-"))
+                    .addClass(themeClass + "-" + theme)
+                    .attr("data-theme", theme);
+            }
+
+            // Add more selectors/theme classes as needed.
+            setTheme(".ui-mobile-viewport", "ui-overlay", theme);
+            setTheme("[data-role='page']", "ui-body", theme);
+            setTheme("[data-role='header']", "ui-bar", theme);
+            setTheme("[data-role='listview'] > li", "ui-bar", theme);
+            setTheme(".ui-btn", "ui-btn-up", theme);
+            setTheme(".ui-btn", "ui-btn-hover", theme);
+        };
+        $('#menu_switch_theme').click(() => {
+            let theme = 'a';
+            if(current_theme === 'a') {
+                theme = 'b';
+            } else {
+                theme = 'a';
+            }
+            current_theme = theme;
+            switch_theme(theme);
+        });
+    }
     export function show_message(msg: string) {
         document.getElementById('interaction').innerHTML = msg;
     }
     export function print_query_content(content: string) {
         document.getElementById('query_content').innerHTML = content;
     }
+    export function switch_theme(theme: string) {
+        $.mobile.changeGlobalTheme(theme);
+    }
+
+
+    /**
+     * Check for the various File API support.
+     */
+    function get_reader_when_checked_file_API(): FileReader | undefined {
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+            let reader = new FileReader();
+            return reader;
+        } else {
+            alert('The File APIs are not fully supported by your browser. Fallback required.');
+            return undefined;
+        }
+    }
+
+    function set_file() {
+        document.getElementById('base_file').onchange = function(this: HTMLInputElement) {
+
+            let file = this.files[0];
+            let reader = get_reader_when_checked_file_API();
+            if(!reader) {
+                return;
+            }
+            reader.onload = function(this) {
+                // Entire file
+                //console.log(this.result);
+
+                // By lines
+                let lines = (<string>this.result).split('\n');
+                test.query = lines.filter((line: string) => line.trim() !== '').map((line: string) => parse_line_from_base(line));
+
+                goto_next_query();
+                console.log('Loaded ' + test.queries.length + ' queries.');
+                UI.show_message('Loaded ' + test.queries.length + ' queries.');
+            };
+            reader.readAsText(file);
+        };
+    }
+    let current_theme = 'a';
+
 }
 
 
@@ -140,45 +220,6 @@ function goto_prev_query() {
     document.getElementById('interaction').innerHTML = "";
     show_query(prev);
 }
-
-/**
- * Check for the various File API support.
- */
-function get_reader_when_checked_file_API(): FileReader | undefined {
-    if (window.File && window.FileReader && window.FileList && window.Blob) {
-        let reader = new FileReader();
-        return reader;
-    } else {
-        alert('The File APIs are not fully supported by your browser. Fallback required.');
-        return undefined;
-    }
-}
-
-function set_file() {
-    document.getElementById('base_file').onchange = function(this: HTMLInputElement) {
-
-        let file = this.files[0];
-        let reader = get_reader_when_checked_file_API();
-        if(!reader) {
-            return;
-        }
-        reader.onload = function(this) {
-            // Entire file
-            //console.log(this.result);
-
-            // By lines
-            let lines = (<string>this.result).split('\n');
-            test.query = lines.filter((line: string) => line.trim() !== '').map((line: string) => parse_line_from_base(line));
-
-            goto_next_query();
-            console.log('Loaded ' + test.queries.length + ' queries.');
-            UI.show_message('Loaded ' + test.queries.length + ' queries.');
-        };
-        reader.readAsText(file);
-    };
-}
-
-
 
 
 function parse_line_from_base(line: string): Query {
