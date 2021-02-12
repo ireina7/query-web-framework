@@ -1,6 +1,7 @@
 /* Core configuration js file */
 
 import { config } from '../config.js';
+import { switch_to_pc } from './device.js';
 import {
     dynamically_load_script,
     get_random_Int,
@@ -151,6 +152,7 @@ export namespace UI {
             current_theme = theme;
             switch_theme(theme);
         });
+        $('#menu_switch_device').click(() => switch_to_pc());
     }
     export function show_message(msg: string) {
         document.getElementById('interaction').innerHTML = msg;

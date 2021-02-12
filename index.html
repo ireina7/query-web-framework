@@ -14,11 +14,23 @@
   <script>
     switch_device();
   </script>
+
+
 </head>
 
 <body>
-<p>Hello, PC!</p>
+  <label> </label>
+  <label for="search">Query Web Framework</label>
+  <input type="file" name="base_file" id="base_file">
+  <form action="http://baidu.com/s" method="get">
+    <div>
+      <input name="wd" id="search" value="">
+    </div>
+    <div>
+      <button>search</button>
+    </div>
+  </form>
+  <a href="#" onclick="switch_to_mobile();">Go to mobile version</a>
 </body>
-
 
 </html>
