@@ -1,7 +1,7 @@
 #+Title:  Query Web Framework
 #+Author: Ireina
 
-Small, portable mobile question answering web framework
+Small, portable comprehensive question answering web framework
 
 ** Dependences
 - Node.js

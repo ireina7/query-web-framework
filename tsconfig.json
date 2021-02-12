@@ -13,6 +13,8 @@
   },
 
   "files": [
-    "src/core.ts"
+    "src/core.ts",
+    "src/device.ts",
+    "mobile/src/core.ts"
   ]
 }
