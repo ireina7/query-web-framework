@@ -4,12 +4,16 @@
 Small, portable mobile question answering web framework
 
 ** Dependences
-- node.js
+- Node.js
+- JQuery Mobile
 - http-server (or any other servers you like)
 - TypeScript compiler =tsc=.
 
 
 ** Getting started
+*** Configuration
+You can change default configuration in file =config.ts=.
+
 *** In shell:
 #+BEGIN_SRC shell
 tsc

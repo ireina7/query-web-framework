@@ -58,6 +58,7 @@ class Query {
 }
 
 class Test implements Iterable<Query> {
+
     queries: Query[];
     current_id: number;
     private history: number[];
@@ -108,6 +109,7 @@ class Test implements Iterable<Query> {
 }
 
 export namespace UI {
+
     export function init(c?: typeof config) {
         set_file();
         $('#next_button').click(goto_next_query);
@@ -165,7 +167,7 @@ export namespace UI {
     /**
      * Check for the various File API support.
      */
-    function get_reader_when_checked_file_API(): FileReader | undefined {
+    function get_reader_when_checked_file_API(): Maybe<FileReader> {
         if (window.File && window.FileReader && window.FileList && window.Blob) {
             let reader = new FileReader();
             return reader;
