@@ -10,6 +10,8 @@ export function get_random_Int(max: number) {
 }
 
 
-export const Nothing = Symbol('nothing');
-export type Nothing = typeof Nothing;
-export type Maybe<T> = T | Nothing;
+export type Maybe<T> = T | undefined;
+
+export interface Iterable<T> {
+    next(): Maybe<T>;
+}

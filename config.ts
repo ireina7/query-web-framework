@@ -1,17 +1,17 @@
 export let config = {
 
     UI: {
-        Title: 'Query System v0.1.7',
-        Footer: 'Support us? visit github@ireina7',
+        title: 'Query System v0.1.7',
+        footer: 'Support us? visit github@ireina7',
         theme: 'light',
         default_query_content: 'Please load base file.',
-        Previous: 'Prev',
-        Next: 'Next',
-        Select_msg: "It's your turn:",
-        Submit: 'Submit',
-        Answer: 'Show answer',
-        Menu: 'Menu',
-        Search: 'Type to search',
+        prev: 'Prev',
+        next: 'Next',
+        select_msg: "It's your turn:",
+        submit: 'Submit',
+        answer: 'Show answer',
+        menu: 'Menu',
+        search: 'Type to search',
     },
 
     setting: {

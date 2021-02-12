@@ -4,7 +4,8 @@ import { config } from '../config.js';
 import {
     dynamically_load_script,
     get_random_Int,
-    Nothing, Maybe
+    Maybe,
+    Iterable
 } from './utils.js';
 
 declare var jquery: any;
@@ -18,19 +19,21 @@ function main() {
     set_file();
     get_random_Int(1);
     $('#next_button').click(goto_next_query);
-    $('#prev_button').click(prev_query);
+    $('#prev_button').click(goto_prev_query);
 }
 
-function apply_config(config: any) {
+function apply_config(c: typeof config = config) {
     function set(id: string, content: string) {
         document.getElementById(id).innerHTML = content;
     }
-    set('title', config.UI.Title);
-    set('footer', config.UI.Footer);
-    set('prev_button', config.UI.Previous);
-    set('next_button', config.UI.Next);
-    set('menu_button', config.UI.Menu);
-    set('query_content', '<b>' + config.UI.default_query_content + '</b>');
+    [
+        ['title', c.UI.title],
+        ['footer', c.UI.footer],
+        ['prev_button', c.UI.prev],
+        ['next_button', c.UI.next],
+        ['menu_button', c.UI.menu],
+        ['query_content', '<b>' + c.UI.default_query_content + '</b>']
+    ].map(([k, v]) => set(k, v));
 }
 
 
@@ -56,20 +59,75 @@ class Query {
     }
 }
 
-function Query_Unit(id: number, category: string, query: string, choice: string[], answer: string): Query {
-    return new Query (
-        id,
-        category,
-        query,
-        choice,
-        answer
-    );
+class Test implements Iterable<Query> {
+    queries: Query[];
+    current_id: number;
+    private history: number[];
+    private f_next: (id: number) => number;
+
+    constructor(queries: Query[],
+                f_next: (id: number) => number =
+        config.setting.random_next
+        ? id => get_random_Int(queries.length)
+        : id => id + 1)
+    {
+        this.queries = queries;
+        this.current_id = 0;
+        this.history = [];
+        this.f_next = f_next;
+    }
+
+    get current_query() {
+        return this.queries[this.current_id];
+    }
+
+    set iter_function(f_next: (id: number) => number) {
+        this.f_next = f_next;
+    }
+    set query(queries: Query[]) {
+        this.queries = queries;
+    }
+
+    next(): Maybe<Query> {
+        if(this.queries.length <= 0) {
+            alert("No query! Please load base file first of check your base file if empty!");
+            return undefined;
+        }
+        this.history.push(this.current_id);
+        this.current_id = this.f_next(this.current_id);
+        if(this.current_id >= this.queries.length || this.current_id < 0) {
+            this.current_id = 0;
+        }
+        return this.queries[this.current_id];
+    }
+    prev(): Maybe<Query> {
+        if(this.history.length === 0) {
+            return this.queries[this.current_id];
+        }
+        this.current_id = this.history.pop();
+        return this.queries[this.current_id];
+    }
 }
 
-var queries: Query[] = [];
-var current_query_id = 0;
-var query_history: Query[] = [];
-var goto_next_query = config.setting.random_next ? rand_query : next_query;
+
+let test: Test = new Test([]);
+
+function goto_next_query() {
+    let next = test.next()!;
+    if(!next) {
+        return;
+    }
+    document.getElementById('interaction').innerHTML = "";
+    show_query(next);
+}
+function goto_prev_query() {
+    let prev = test.prev()!;
+    if(!prev) {
+        return;
+    }
+    document.getElementById('interaction').innerHTML = "";
+    show_query(prev);
+}
 
 /**
  * Check for the various File API support.
@@ -98,10 +156,11 @@ function set_file() {
 
             // By lines
             let lines = (<string>this.result).split('\n');
-            queries = lines.filter((line: string) => line.trim() !== '').map((line: string) => parse_line_from_base(line));
-            console.log('Loaded ' + queries.length + ' queries.');
-            next_query();
-            //console.log(queries);
+            test.query = lines.filter((line: string) => line.trim() !== '').map((line: string) => parse_line_from_base(line));
+
+            goto_next_query();
+            console.log('Loaded ' + test.queries.length + ' queries.');
+            show_message('Loaded ' + test.queries.length + ' queries.');
         };
         reader.readAsText(file);
     };
@@ -114,11 +173,12 @@ function print_query_content(content: string) {
 
 function parse_line_from_base(line: string): Query {
     let units = line.split('\t');
-    return Query_Unit(Number(units[0]), units[1], units[2], [units[3], units[4], units[5], units[6]], units[7]);
+    return new Query(Number(units[0]), units[1], units[2], [units[3], units[4], units[5], units[6]], units[7]);
 }
 
 
-function next_query() {
+/*
+function next_query(): Query {
     if(queries.length <= 0) {
         console.log("No query! Please load base file first of check your base file if empty!");
         return;
@@ -131,10 +191,9 @@ function next_query() {
     if(queries[current_query_id] === undefined) {
         current_query_id = 0;
     }
-    document.getElementById('interaction').innerHTML = "";
-    show_query(queries[current_query_id]);
+    return queries[current_query_id];
 }
-function prev_query() {
+function prev_query(): Query {
     if(queries.length <= 0) {
         console.log("No query! Please load base file first of check your base file if empty!");
         return;
@@ -147,12 +206,11 @@ function prev_query() {
     if(queries[current_query_id] === undefined) {
         current_query_id = 0;
     }
-    document.getElementById('interaction').innerHTML = "";
-    show_query(queries[current_query_id]);
+    return queries[current_query_id];
 }
 
 
-function rand_query() {
+function rand_query(): Query {
     if(queries.length <= 0) {
         console.log("No query! Please load base file first of check your base file if empty!");
         return;
@@ -162,12 +220,12 @@ function rand_query() {
     if(queries[current_query_id] === undefined) {
         current_query_id = 0;
     }
-    document.getElementById('interaction').innerHTML = "";
-    show_query(queries[current_query_id]);
+    return queries[current_query_id];
 }
+*/
 
 function check_answer() {
-    let unit = queries[current_query_id];
+    let unit = test.current_query;
     let cat = unit.category;
     var res = "";
     if(cat == '单选题') {
@@ -200,7 +258,7 @@ function check_answer() {
     }
 }
 function show_answer() {
-    show_message(queries[current_query_id].answer);
+    show_message(test.current_query.answer);
 }
 
 function show_message(msg: string) {
@@ -263,15 +321,15 @@ function show_query(unit: Query) {
 }
 
 function create_selections(selections: string[]) {
-    $("#selection_board").html('<fieldset data-role="controlgroup"><legend><b>' + config.UI.Select_msg + '</b></legend></fieldset>');
+    $("#selection_board").html('<fieldset data-role="controlgroup"><legend><b>' + config.UI.select_msg + '</b></legend></fieldset>');
 
     for (var i = 0; i < selections.length; i++) {
         $("fieldset").append('<input type="checkbox" name="' + selections[i] + '" id="id' + i + '"><label for="id' + i + '">' + selections[i] + '</label>');
     }
     //$("#selection_board").append('<a href="#" data-role="button" data-inline="true" id="btndelcat">Elimina</a>');
     $("#selection_board").append('<div data-role="navbar"><ul>\
-<li><a href="#" id="button_check_answer" class="ui-btn-active">' + config.UI.Submit + '</a>\</li>\
-<li><a href="#" id="button_show_answer">' + config.UI.Answer + '</a>\
+<li><a href="#" id="button_check_answer" class="ui-btn-active">' + config.UI.submit + '</a>\</li>\
+<li><a href="#" id="button_show_answer">' + config.UI.answer + '</a>\
 </li></ul></div>');
     $("#selection_board").trigger('create');
     $("#button_check_answer").click(check_answer);
