@@ -15,8 +15,8 @@ declare var $: any;
 
 function main() {
     console.log("debug!");
-    apply_config(config);
     UI.init();
+    apply_config(config);
 }
 
 function apply_config(c: typeof config = config) {
@@ -31,6 +31,7 @@ function apply_config(c: typeof config = config) {
         ['menu_button', c.UI.menu],
         ['query_content', '<b>' + c.UI.default_query_content + '</b>']
     ].map(([k, v]) => set(k, v));
+    UI.switch_theme(c.UI.theme);
 }
 
 
@@ -131,10 +132,12 @@ export namespace UI {
             // Add more selectors/theme classes as needed.
             setTheme(".ui-mobile-viewport", "ui-overlay", theme);
             setTheme("[data-role='page']", "ui-body", theme);
+            setTheme("[data-role='page']", "ui-page-theme", theme);
             setTheme("[data-role='header']", "ui-bar", theme);
             setTheme("[data-role='listview'] > li", "ui-bar", theme);
             setTheme(".ui-btn", "ui-btn-up", theme);
             setTheme(".ui-btn", "ui-btn-hover", theme);
+            setTheme(".ui-btn", "ui-btn", theme);
         };
         $('#menu_switch_theme').click(() => {
             let theme = 'a';
@@ -155,6 +158,7 @@ export namespace UI {
     }
     export function switch_theme(theme: string) {
         $.mobile.changeGlobalTheme(theme);
+        current_theme = theme;
     }
 
 
@@ -194,9 +198,9 @@ export namespace UI {
             reader.readAsText(file);
         };
     }
-    let current_theme = 'a';
+    let current_theme = 'b';
 
-}
+}//end namespace UI
 
 
 

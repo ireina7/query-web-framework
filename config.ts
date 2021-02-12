@@ -3,7 +3,7 @@ export let config = {
     UI: {
         title: 'Query System v0.1.7',
         footer: 'Support us? visit github@ireina7',
-        theme: 'light',
+        theme: 'b',
         default_query_content: 'Please load base file.',
         prev: 'Prev',
         next: 'Next',
