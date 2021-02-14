@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-
+import './mobile/core';
 
 function App(): JSX.Element {
     return (
@@ -23,6 +23,8 @@ function App(): JSX.Element {
     </div>
   );
 }
+
+
 
 
 function DefaultApp() {
