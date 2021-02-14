@@ -1,0 +1,24 @@
+#+Title:  Query Web Framework
+#+Author: Ireina
+
+Small, portable comprehensive question answering web framework
+
+** Dependences
+- Node.js
+- React
+- TypeScript compiler =tsc=.
+- JQuery Mobile
+- http-server (or any other servers you like)
+
+
+** Getting started
+*** Configuration
+You can change default configuration in file =config.ts=.
+
+*** In shell:
+#+BEGIN_SRC shell
+npm start
+#+END_SRC
+
+*** In browser:
+Jump to =http://localhost:3000/=.
