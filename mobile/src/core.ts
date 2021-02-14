@@ -22,7 +22,7 @@ function main() {
 
 function apply_config(c: typeof config = config) {
     function set(id: string, content: string) {
-        document.getElementById(id).innerHTML = content;
+        document.getElementById(id)!.innerHTML = content;
     }
     [
         ['title', c.UI.title],
@@ -104,7 +104,7 @@ class Test implements Iterable<Query> {
         if(this.history.length === 0) {
             return this.queries[this.current_id];
         }
-        this.current_id = this.history.pop();
+        this.current_id = this.history.pop()!;
         return this.queries[this.current_id];
     }
 }
@@ -155,10 +155,10 @@ export namespace UI {
         $('#menu_switch_device').click(() => switch_to_pc());
     }
     export function show_message(msg: string) {
-        document.getElementById('interaction').innerHTML = msg;
+        document.getElementById('interaction')!.innerHTML = msg;
     }
     export function print_query_content(content: string) {
-        document.getElementById('query_content').innerHTML = content;
+        document.getElementById('query_content')!.innerHTML = content;
     }
     export function switch_theme(theme: string) {
         $.mobile.changeGlobalTheme(theme);
@@ -180,9 +180,9 @@ export namespace UI {
     }
 
     function set_file() {
-        document.getElementById('base_file').onchange = function(this: HTMLInputElement) {
+        $('#base_file').change(function(this: HTMLInputElement) {
 
-            let file = this.files[0];
+            let file = this.files![0];
             let reader = get_reader_when_checked_file_API();
             if(!reader) {
                 return;
@@ -200,7 +200,7 @@ export namespace UI {
                 UI.show_message('Loaded ' + test.queries.length + ' queries.');
             };
             reader.readAsText(file);
-        };
+        });
     }
     let current_theme = 'b';
 
@@ -217,7 +217,7 @@ function goto_next_query() {
     if(!next) {
         return;
     }
-    document.getElementById('interaction').innerHTML = "";
+    document.getElementById('interaction')!.innerHTML = "";
     show_query(next);
 }
 function goto_prev_query() {
@@ -225,7 +225,7 @@ function goto_prev_query() {
     if(!prev) {
         return;
     }
-    document.getElementById('interaction').innerHTML = "";
+    document.getElementById('interaction')!.innerHTML = "";
     show_query(prev);
 }
 
@@ -344,7 +344,7 @@ function check_answer_yes_no(unit: Query): string {
     return ans;
 }
 function check_answer_fill(unit: Query): string {
-    document.getElementById('interaction').innerHTML = "O";
+    document.getElementById('interaction')!.innerHTML = "O";
     return "";
 }
 
